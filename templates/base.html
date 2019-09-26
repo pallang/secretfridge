@@ -1,0 +1,105 @@
+{%extends "material/base.html" %}
+
+<!--favicon-->
+{% block head %}
+{{super()}}
+<link rel="shortcut icon" href="{{url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+<link rel="icon" href="{{url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+{% endblock %}
+
+{% block navbar %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <title>Secret Fridge</title>
+
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="static/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="static/css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+</head>
+<body>
+  <ul id="dropdown1" class="dropdown-content">
+    <li><a href="{{ url_for('login') }}">로그인</a></li>
+    <li><a href="{{ url_for('logout') }}">로그아웃</a></li>
+    <li class="divider"></li>
+    <li><a href="{{ url_for('register') }}">회원가입</a></li>
+  </ul>
+  <nav class="light-blue lighten-1" role="navigation">
+    <div class="nav-wrapper container"><a id="logo-container" href="/" class="brand-logo">Secret Fridge</a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="/user/{{current_user.username}}">내 정보</a></li>
+        <!-- Dropdown Trigger -->
+        <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">로그인/회원가입<i class="material-icons right">arrow_drop_down</i></a></li>
+      </ul>
+
+      <ul id="nav-mobile" class="sidenav">
+        <li><a href="/user/{{current_user.username}}"><i class="material-icons">account_circle</i>내 정보</a></li>
+        <li><a href="{{ url_for('register') }}"><i class="material-icons">person_add</i>회원가입</a></li>
+        <li><a href="{{ url_for('login') }}"><i class="material-icons">person</i>로그인</a></li>
+        <li><a href="{{ url_for('logout') }}"><i class="material-icons">person_outline</i>로그아웃</a></li>
+      </ul>
+      <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
+{% endblock %}
+
+
+<!--본문-->
+{% block content %}
+<div class="container">
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
+    {% endfor %}
+
+    {% block page_content %}{% endblock %}
+</div>
+{% endblock %}
+
+
+<!--footer-->
+{% block footer %}
+  <footer class="page-footer orange">
+    <div class="container">
+      <div class="row">
+        <div class="col l6 s12">
+          <h5 class="white-text">팀명 : 겨울왕국</h5>
+          <p class="grey-text text-lighten-4">2019 연세 - 넥슨 창의플랫폼의 참가팀.</p>
+
+
+        </div>
+
+        <div class="col l3 s12">
+          <h5 class="white-text">팀원</h5>
+          <ul>
+            <p class="grey-text text-lighten-4">안세환 : 서버 및 웹앱</p>
+            <p class="grey-text text-lighten-4">최민서 : 아두이노</p>
+            <p class="grey-text text-lighten-4">심동규 : 냉장고</p>
+            <p class="grey-text text-lighten-4">최해찬 : 냉장고</p>
+            <p class="grey-text text-lighten-4">윤효영 : 홍보 및 편집</p>
+            <p class="grey-text text-lighten-4">문의 사항 : ploki808@naver.com </p>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <div class="container">
+      Made by <a class="orange-text text-lighten-3" href="http://materializecss.com">Materialize</a>
+      </div>
+    </div>
+  </footer>
+
+
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="static/js/materialize.js"></script>
+  <script src="static/js/init.js"></script>
+
+  </body>
+</html>
+{% endblock %}
