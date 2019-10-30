@@ -103,13 +103,14 @@ class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), unique=True, index=True)
+    phone = db.Column(db.String(64), unique=True, index=True)
     username = db.Column(db.String(64), unique=True, index=True)
     password_hash  = db.Column(db.String(128))
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
     @property
     def password(self):
-        raise AttributeError('password is not a readalbe attribute')
+        raise AttributeError('password is not a readable attribute')
 
     @password.setter
     def password(self, password):
@@ -131,7 +132,7 @@ class LoginForm(Form):
 # 회원가입폼
 class RegistrationForm(Form):
     email = StringField('이메일', validators=[Required(), Length(1, 64), Email()])
-    phone_number = StringField('전화번호', validators=[Required(), Length(1,64)])
+    phone = StringField('전화번호', validators=[Required(), Length(1,64)])
     username = StringField('이름', validators=[Required(), Length(1, 64),
                                                    Regexp('^[가-힣A-Za-z][가-힣A-Za-z]*$', 0, '이름은 한글 또는 영어만 가능합니다.')])
     password = PasswordField('비밀번호', validators=[Required(), EqualTo('password2', message='비밀번호가 일치합니다.')])
@@ -145,12 +146,12 @@ class RegistrationForm(Form):
     # 동명이인일 경우를 생각해 뺏더니 데이터베이스에 갱신이 안됨
     def validate_username(self, field):
         if User.query.filter_by(username=field.data).first():
-            raise ValidationError('Username already in use.')
+            raise ValidationError('이미 사용중인 이름입니다.')
 
 # 냉장고데이터폼
 class SettingForm(Form):
-    time = StringField('사용할 날짜', validators=[Required(), Length(1,2), Regexp('^[0-9]', 0, 'Only number')])
-    pin = StringField('냉장고 암호', validators=[Required(), Length(1.64), Regexp('^[0-9]', 0, 'Only number')])
+    time = StringField('사용할 날짜', validators=[Required(), Length(1,2), Regexp('^[0-9]', 0, '숫자만 입력해주세요.')])
+    pin = StringField('냉장고 암호', validators=[Required(), Length(1.64), Regexp('^[0-9]', 0, '숫자만 입력해주세요.')])
     submit = SubmitField('예약')
 
 # 종료폼
@@ -237,7 +238,7 @@ def logout():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(email=form.email.data, username=form.username.data, password=form.password.data, phone=form.phone_number.data)
+        user = User(email=form.email.data, phone=form.phone.data, username=form.username.data, password=form.password.data)
         db.session.add(user)
         flash('회원가입을 완료하였습니다.')
         return redirect(url_for('login'))
