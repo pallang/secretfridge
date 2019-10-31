@@ -51,22 +51,26 @@ password_hash = db.Column(db.String(128))
 # 기간끝난 냉장고 사용 종료
 def delete_txt():
     while True:
-        sleep(43200)
-        with open('fridge1.txt') as f1, open('fridge2.txt') as f2:
+        sleep(10)
+        with open('fridge1.txt', encoding='ISO-8859-2') as f1, open('fridge2.txt', encoding='ISO-8859-2') as f2:
             lst1_date_ = f1.read().splitlines()
             lst2_date_ = f2.read().splitlines()
             if lst1_date_:
                 lst1_date = lst1_date_[2].split('-')
-                date_time1 = str(date(int(lst1_date[0]), int(lst1_date[1][1:]), int(lst1_date[2])) - date.today())[:1]
-                if date_time1 == '-':
+                date_time1 = str(date(int(lst1_date[0]), int(lst1_date[1]), int(lst1_date[2])) - date.today())
+                if date_time1 == '-1 day, 0:00:00':
                     with open('fridge1.txt', 'w') as fw1:
                         fw1.write('')
+                        with open('pin1.txt', 'w') as p1:
+                            p1.write('')
             if lst2_date_:
                 lst2_date = lst2_date_[2].split('-')
-                date_time2 = str(date(int(lst2_date[0]), int(lst2_date[1][1:]), int(lst2_date[2])) - date.today())[:1]
-                if date_time2 == '-':
+                date_time2 = str(date(int(lst2_date[0]), int(lst2_date[1]), int(lst2_date[2])) - date.today())
+                if date_time2 == '-1 day, 0:00:00':
                     with open('fridge2.txt', 'w') as fw2:
                         fw2.write('')
+                        with open('pin2.txt', 'w') as p2:
+                            p2.write('')
 delete = Thread(target=delete_txt)
 delete.start()
 
@@ -185,6 +189,8 @@ def user(name):
             if form.validate_on_submit():
                 with open('fridge1.txt', 'w') as f1:
                     f1.write('')
+                    with open('pin1.txt', 'w') as p1:
+                        p1.write('')
                 return render_template('index.html', current_time=datetime.utcnow())
             return render_template('user.html', form=form, name=current_user.username, usedata=usedata, timelimit=timelimit,
                                    pinnumber=pinnumber, username=lst1[0])
@@ -202,6 +208,8 @@ def user(name):
             if form.validate_on_submit():
                 with open('fridge2.txt', 'w') as f2:
                     f2.write('')
+                    with open('pin2.txt', 'w') as p2:
+                        p2.write('')
                 return render_template('index.html', current_time=datetime.utcnow())
             return render_template('user.html', form=form, name=current_user.username, usedata=usedata,
                                    timelimit=timelimit, pinnumber=pinnumber, username=lst2[0])
@@ -263,6 +271,8 @@ def set1():
                               str(now + delta) + '\n' +
                               pin1 + '\n' +
                               current_user.email)
+                    with open('pin1.txt', 'w') as pn1:
+                        pn1.write(pin1)
                     return redirect(url_for('index'))
             return render_template('set1.html', form=form)
         elif lst1[0] == current_user.username:
@@ -292,6 +302,8 @@ def set2():
                               str(now + delta) + '\n' +
                               pin2 + '\n' +
                               current_user.email)
+                    with open('pin2.txt', 'w') as pn2:
+                        pn2.write(pin2)
                     return redirect(url_for('index'))
             return render_template('set2.html', form=form)
         elif lst2[0] == current_user.username:
@@ -303,14 +315,14 @@ def set2():
     return render_template('index.html', current_time=datetime.utcnow())
 
 # 데이터 처리
-@app.route('/fridge1')
+@app.route('/p1')
 def read1_txt():
-    f = open('fridge1.txt')
+    f = open('pin1.txt')
     return "</br>".join(f.readlines())
 
-@app.route('/fridge2')
+@app.route('/p2')
 def read2_txt():
-    f = open('fridge2.txt')
+    f = open('pin2.txt')
     return "</br>".join(f.readlines())
 
 
