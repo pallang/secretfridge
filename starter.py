@@ -51,7 +51,7 @@ password_hash = db.Column(db.String(128))
 # 기간끝난 냉장고 사용 종료
 def delete_txt():
     while True:
-        sleep(10)
+        sleep(3600)
         with open('fridge1.txt', encoding='ISO-8859-2') as f1, open('fridge2.txt', encoding='ISO-8859-2') as f2:
             lst1_date_ = f1.read().splitlines()
             lst2_date_ = f2.read().splitlines()
