@@ -156,11 +156,11 @@ class RegistrationForm(Form):
 class SettingForm(Form):
     time = StringField('사용할 날짜', validators=[Required(), Length(1,2), Regexp('^[0-9]', 0, '숫자만 입력해주세요.')])
     pin = StringField('냉장고 암호', validators=[Required(), Length(1.64), Regexp('^[0-9]', 0, '숫자만 입력해주세요.')])
-    submit = SubmitField('예약')
+    submit = SubmitField('구독하기')
 
 # 종료폼
 class ShutdownForm(Form):
-    submit = SubmitField('지금 사용 종료')
+    submit = SubmitField('즉시 구독 취소')
 
 @login_manager.user_loader
 def load_user(user_id):
